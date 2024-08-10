@@ -21,7 +21,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
       // Make a request to the Google Places API
       const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
         params: {
-            location: '40.748817,-93.2650',
+            location: '44.9778,-93.2650',
             radius: 16093.4,
             type: 'restaurant',
             key: PLACES_API_KEY
@@ -29,13 +29,14 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
       });
   
       // Return the API response to the client
-      res.json(response.data);
+      res.send(response.data);
     } catch (error) {
       // Handle any errors
       console.error('Error fetching data from Google Places API:', error);
       res.status(500).json({ error: 'Error fetching data from Google Places API' });
     }
   });
+
 
 
 
