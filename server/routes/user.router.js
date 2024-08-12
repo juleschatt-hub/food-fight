@@ -14,6 +14,20 @@ router.get('/', rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 
+router.get('/users', (req, res) => {
+  const queryText = `SELECT * FROM "user" ORDER BY id ASC;`;
+  pool.query(queryText)
+  .then((dbResult) => {
+    let users = dbResult.rows;
+    res.send(users);
+  } )
+  .catch((err) => {
+    console.log('get all users failed', err);
+    res.sendStatus(500);
+  })
+  
+})
+
 // Handles POST request with new user data
 // The only thing different from this and every other post we've seen
 // is that the password gets encrypted before being inserted
