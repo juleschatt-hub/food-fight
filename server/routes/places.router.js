@@ -5,7 +5,7 @@ const {
 } = require('../modules/authentication-middleware');
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
-//const userStrategy = require('../strategies/user.strategy');
+const userStrategy = require('../strategies/user.strategy');
 
 require('dotenv').config();
 
@@ -36,10 +36,16 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     const randomRestaurants = restaurants.slice(0, 10);
     console.log('array size', randomRestaurants.length);
 
+    //isolating photo reference
+    const photos = randomRestaurants.map(i => {
+        let photoReference = i.photos.map(i => i.photo_reference);
+        console.log('photo reference', photoReference)
+    })
+    
+
       // Return the API response to the client
       res.send(randomRestaurants);
     } catch (error) {
-      // Handle any errors
       console.error('Error fetching data from Google Places API:', error);
       res.status(500).json({ error: 'Error fetching data from Google Places API' });
     }
