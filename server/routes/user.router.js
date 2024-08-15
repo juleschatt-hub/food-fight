@@ -14,11 +14,14 @@ router.get('/', rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 
-router.get('/users', (req, res) => {
-  const queryText = `SELECT * FROM "user" ORDER BY id ASC;`;
-  pool.query(queryText)
+router.get('/users/:id', rejectUnauthenticated, (req, res) => {
+  let {id} = req.params;
+  console.log(id);
+  const queryText = `SELECT * FROM "user" WHERE "id" = $1;`;
+  pool.query(queryText, [id])
   .then((dbResult) => {
     let users = dbResult.rows;
+    console.log('users', users);
     res.send(users);
   } )
   .catch((err) => {

@@ -56,7 +56,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
 
 
   //POST 10 random restaurants to DB
-  router.post('/restaurants', async (req, res) => {
+  router.post('/restaurants/', async (req, res) => {
     const connection = await pool.connect();
     try {
         // Make a request to the Google Places API
@@ -69,8 +69,10 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
           },
         });
 
+        //Axios call to get guestID to post guestId to fight
+        const getGuestId = await axios.get('http://localhost:5001/api/user/users');
         const dinerId = req.user.id;
-        const guestId = 4;
+        const guestId = getGuestId.data[0].id;
         const dinnerDate = '10-10-2024';
         const restaurantMatchId = null;
         const fightQueryText = `INSERT INTO fights (diner_id, guest_id, dinner_date, restaurant_match_id)
@@ -78,15 +80,15 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         await connection.query('BEGIN;');
         const result = await connection.query(fightQueryText, [dinerId, guestId, dinnerDate, restaurantMatchId]);
         const fightId = result.rows[0].id;
-      //sorts api call results in a random order
-      const restaurants = response.data.results.sort(() => .5 - Math.random());
-      //after results have been radomized this limits 
-      //the number of results that post to DB to 10
-      const randomRestaurants = restaurants.slice(0, 10);
-      console.log('array size', randomRestaurants.length);
-        //maps random restaurant results to variables to be posted to the restaurants table
-        //*********************STILL NEED TO TIE IN FIGHTID FROM FIGHTS TABLE ONCE I BUILD THAT POST ROUTE*************
-        //sql transactions async await
+
+        //sorts api call results in a random order
+        const restaurants = response.data.results.sort(() => .5 - Math.random());
+
+        //after results have been radomized this limits 
+        //the number of results that post to DB to 10
+        const randomRestaurants = restaurants.slice(0, 10);
+        
+        //maps over randomrestaurants array and posts each restaurant to the restaurants table
        randomRestaurants.map(restaurant => {
         const photoReference = restaurant.photos[0].photo_reference;
         const restaurantName = restaurant.name;
