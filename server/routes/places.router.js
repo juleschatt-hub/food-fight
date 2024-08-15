@@ -5,7 +5,8 @@ const {
 } = require('../modules/authentication-middleware');
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
-const userStrategy = require('../strategies/user.strategy');
+//const userStrategy = require('../strategies/user.strategy');
+//const user = require('./user.router');
 
 require('dotenv').config();
 
@@ -52,8 +53,11 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     }
   });
 
+
+
   //POST 10 random restaurants to DB
   router.post('/restaurants', async (req, res) => {
+    const connection = await pool.connect();
     try {
         // Make a request to the Google Places API
         const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
@@ -65,15 +69,24 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
           },
         });
 
+        const dinerId = req.user.id;
+        const guestId = 4;
+        const dinnerDate = '10-10-2024';
+        const restaurantMatchId = null;
+        const fightQueryText = `INSERT INTO fights (diner_id, guest_id, dinner_date, restaurant_match_id)
+                                VALUES ($1, $2, $3, $4) RETURNING id`
+        await connection.query('BEGIN;');
+        const result = await connection.query(fightQueryText, [dinerId, guestId, dinnerDate, restaurantMatchId]);
+        const fightId = result.rows[0].id;
       //sorts api call results in a random order
       const restaurants = response.data.results.sort(() => .5 - Math.random());
-      
-      //after results have been radomized this takes 
-      //the first ten results from the response
+      //after results have been radomized this limits 
+      //the number of results that post to DB to 10
       const randomRestaurants = restaurants.slice(0, 10);
       console.log('array size', randomRestaurants.length);
-
-
+        //maps random restaurant results to variables to be posted to the restaurants table
+        //*********************STILL NEED TO TIE IN FIGHTID FROM FIGHTS TABLE ONCE I BUILD THAT POST ROUTE*************
+        //sql transactions async await
        randomRestaurants.map(restaurant => {
         const photoReference = restaurant.photos[0].photo_reference;
         const restaurantName = restaurant.name;
@@ -82,22 +95,25 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         const priceLevel = restaurant.price_level;
         const dinerLike = false;
         const guestLike = false;
-        const fightId = 0;
+        //const fightId = fightQueryText.id;
 
         const queryText = `INSERT INTO "restaurants" (fight_id, restaurant_name, place_id, photo_reference, rating, price_level, diner_like, guest_like)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
-        pool
-        .query(queryText, [fightId, restaurantName, placeId, photoReference, rating, priceLevel, dinerLike, guestLike]) 
+                           VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
+         connection.query(queryText, [fightId, restaurantName, placeId, photoReference, rating, priceLevel, dinerLike, guestLike]); 
        
         
     });
+        await connection.query('COMMIT;');
+        res.sendStatus(201);
 
-res.sendStatus(201);
-
-}
+    }
     catch(error) {
-        console.error('error in restaurants post router', error);
+        await connection.query('ROLLBACK;');
+        console.error('Transaction error posting to fights and restaurants ', error);
         res.sendStatus(500);
+    }
+    finally {
+        connection.release();
     }
 
   })
