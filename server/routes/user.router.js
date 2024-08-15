@@ -14,12 +14,10 @@ router.get('/', rejectUnauthenticated, (req, res) => {
   res.send(req.user);
 });
 
-//guest ID will eventuall be passed based on guest that user picks a fight with
-router.get('/users/:id', (req, res) => {
-  let {id} = req.params;
-  console.log(id);
-  const queryText = `SELECT * FROM "user" WHERE "id" = $1;`;
-  pool.query(queryText, [id])
+
+router.get('/users', (req, res) => {
+  const queryText = `SELECT * FROM "user" ORDER BY id ASC;`;
+  pool.query(queryText)
   .then((dbResult) => {
     let users = dbResult.rows;
     console.log('users', users);
@@ -32,32 +30,6 @@ router.get('/users/:id', (req, res) => {
   
 });
 
-
-
-//guest ID will eventuall be passed based on guest that user picks a fight with
-// router.put('/users/:id', (req, res) => {
-//   let {id} = req.params;
-//   console.log(id);
-//   const queryText = `UPDATE "fights" 
-//                     SET "guest_id" = $1
-//                     FROM restaurants 
-//                     WHERE fights.id = restaurants.fight_id;`;
-//   pool.query(queryText, [id])
-//   .then((dbResult) => {
-//     let users = dbResult.rows;
-//     console.log('users', users);
-//     res.send(users);
-//   } )
-//   .catch((err) => {
-//     console.log('get all users failed', err);
-//     res.sendStatus(500);
-//   })
-  
-// })
-
-// Handles POST request with new user data
-// The only thing different from this and every other post we've seen
-// is that the password gets encrypted before being inserted
 router.post('/register', (req, res, next) => {
   const username = req.body.username;
   const password = encryptLib.encryptPassword(req.body.password);

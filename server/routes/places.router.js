@@ -68,12 +68,10 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
               key: PLACES_API_KEY
           },
         });
-
-        //Axios call to get guestID to post guestId to fight
-        const getGuestId = await axios.get(`http://localhost:5001/api/user/users/3`);
-        console.log('Guest ID Response:', getGuestId.data);
+        console.log('req.body', req.body);
+        
         const dinerId = req.user.id;
-        const guestId = getGuestId.data[0].id;
+        const guestId = req.body.guestId;
         const dinnerDate = '10-10-2024';
         const restaurantMatchId = null;
         const fightQueryText = `INSERT INTO fights (diner_id, guest_id, dinner_date, restaurant_match_id)
@@ -90,7 +88,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         const randomRestaurants = restaurants.slice(0, 10);
 
         //maps over randomrestaurants array and posts each restaurant to the restaurants table
-       randomRestaurants.map(restaurant => {
+        await randomRestaurants.map( restaurant => {
         const photoReference = restaurant.photos[0].photo_reference;
         const restaurantName = restaurant.name;
         const placeId = restaurant.place_id;
@@ -98,7 +96,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         const priceLevel = restaurant.price_level;
         const dinerLike = false;
         const guestLike = false;
-        //const fightId = fightQueryText.id;
+        
 
         const queryText = `INSERT INTO "restaurants" (fight_id, restaurant_name, place_id, photo_reference, rating, price_level, diner_like, guest_like)
                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
