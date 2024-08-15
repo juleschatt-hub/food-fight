@@ -70,7 +70,8 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         });
 
         //Axios call to get guestID to post guestId to fight
-        const getGuestId = await axios.get('http://localhost:5001/api/user/users');
+        const getGuestId = await axios.get(`http://localhost:5001/api/user/users/3`);
+        console.log('Guest ID Response:', getGuestId.data);
         const dinerId = req.user.id;
         const guestId = getGuestId.data[0].id;
         const dinnerDate = '10-10-2024';
@@ -87,7 +88,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         //after results have been radomized this limits 
         //the number of results that post to DB to 10
         const randomRestaurants = restaurants.slice(0, 10);
-        
+
         //maps over randomrestaurants array and posts each restaurant to the restaurants table
        randomRestaurants.map(restaurant => {
         const photoReference = restaurant.photos[0].photo_reference;
