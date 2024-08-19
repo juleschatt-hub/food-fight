@@ -15,7 +15,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 });
 
 
-router.get('/users', (req, res) => {
+router.get('/users', rejectUnauthenticated, (req, res) => {
   const queryText = `SELECT * FROM "user" ORDER BY id ASC;`;
   pool.query(queryText)
   .then((dbResult) => {

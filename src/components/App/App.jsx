@@ -58,7 +58,9 @@ function App() {
             exact
             path="/user"
           >
-            <UserPage />
+            {/* <UserPage /> */}
+            <DashBoard />
+
           </ProtectedRoute>
 
           <ProtectedRoute

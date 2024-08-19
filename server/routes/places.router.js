@@ -56,7 +56,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
 
 
   //POST 10 random restaurants to DB
-  router.post('/restaurants/', async (req, res) => {
+  router.post('/restaurants', async (req, res) => {
     const connection = await pool.connect();
     try {
         // Make a request to the Google Places API
