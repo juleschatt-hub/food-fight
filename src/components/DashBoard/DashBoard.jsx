@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
+import FightModal from '../FightModal/FightModal';
+import DiningCompanions from '../DiningCompanions/DiningCompanions';
 
 
 
@@ -13,21 +15,18 @@ function DashBoard() {
     const user = useSelector((store) => store.user);
     const fight = useSelector((store) => store.fightReducer);
 
-    
-
-
     const dispatch = useDispatch();
     const history = useHistory();
     useEffect(() => {      
         dispatch({type: 'FETCH_USER_LIST'});
         
-     }, [dispatch])
+     }, [])
 
      useEffect(() => {
         
         dispatch({type: 'FETCH_FIGHT'});
         
-     }, [dispatch])
+     }, [])
 
 
     const [guestId, setGuestId] = useState(0);
@@ -49,11 +48,15 @@ function DashBoard() {
     return (
 <>
     <div className="container">
+      
+
       <h2>Welcome, {user.first_name}!</h2>
       <p>Your ID is: {user.id}</p>
       <LogOutButton className="btn" />
     </div>
     <div className='container' style={{float: "right"}}>
+    <DiningCompanions />
+    {/* <div className='container' style={{float: "right"}}>
         <h1>Dining Companions:</h1>
             {allUsers.map((guestUser) => 
             <form onSubmit={guestIdSubmit}>
@@ -61,7 +64,6 @@ function DashBoard() {
                     <tbody>
                         <tr key={guestUser.id}>
                             <td>{guestUser.first_name}</td>
-                            <td>{guestUser.last_name}</td>
                             <td style={{justify:"left"}}>
                                 <button className='btn btn_sizeSm'
                                 type='submit'
@@ -74,11 +76,11 @@ function DashBoard() {
                     </tbody>
                 </table>
             </form>
-            )}      
+            )}       */}
      </div>
    
 
-<div className='container'>
+{/* <div className='container'>
       <h1>Fight:</h1>
       <table border="1" cellPadding="10" cellSpacing="0">
         <thead>
@@ -107,7 +109,8 @@ function DashBoard() {
           ))}
         </tbody>
       </table>
-    </div>    
+    </div>   */}
+    <FightModal />
 </>
     );   
   }

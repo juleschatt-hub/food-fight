@@ -20,6 +20,7 @@ import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import DashBoard from '../DashBoard/DashBoard';
+import FightModal from '../FightModal/FightModal.jsx';
 
 import './App.css';
 
@@ -70,7 +71,7 @@ function App() {
           >
             <DashBoard />
           </ProtectedRoute>
-
+          
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact
