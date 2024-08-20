@@ -20,7 +20,9 @@ CREATE TABLE "restaurants" (
 	"rating" FLOAT,
 	"price_level" INT,
 	"diner_like" BOOLEAN,
-	"guest_like" BOOLEAN
+	"guest_like" BOOLEAN,
+	"max_height" INT,
+	"max_width" INT
 	
 );
 

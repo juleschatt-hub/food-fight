@@ -8,3 +8,5 @@ const fightReducer = (state = [], action) => {
             return [...state];
     }
 }
+
+export default fightReducer;

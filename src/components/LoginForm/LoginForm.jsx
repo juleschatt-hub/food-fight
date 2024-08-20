@@ -27,9 +27,6 @@ function LoginForm() {
 
   return (
     <form className="formPanel" onSubmit={login}>
-      <center>
-        <button className="btn">X</button>
-      </center>
       <h2>Login</h2>
       {errors.loginMessage && (
         <h3 className="alert" role="alert">

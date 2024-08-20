@@ -17,7 +17,7 @@ const router = express.Router();
 //Places API
 const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
-router.get('/', rejectUnauthenticated, async (req, res) => {
+router.get('/placesget', rejectUnauthenticated, async (req, res) => {
     try {
       // Make a request to the Google Places API
       const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
@@ -41,7 +41,9 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     //isolating photo reference
     randomRestaurants.map(i => {
         let photoReference = i.photos[0].photo_reference;
+        let maxHeight = i.photos[0].height;
         console.log('photo reference', photoReference);
+        console.log('height', maxHeight);
     })
     
 
@@ -52,6 +54,26 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
       res.status(500).json({ error: 'Error fetching data from Google Places API' });
     }
   });
+
+  router.get('/', (req, res) => {
+    const sqlText = `SELECT * 
+                      FROM "fights" 
+                      JOIN "restaurants" ON fights.id = restaurants.fight_id
+                      WHERE fights.id = (
+                          SELECT id
+                          FROM "fights"
+                          ORDER BY id DESC
+                          LIMIT 1
+                      );`;
+    pool.query(sqlText)
+    .then((result) => {
+        console.log('result of fight get', result.rows);
+        res.send(result.rows)
+    }).catch(err => {
+        console.log(err);
+        res.sendStatus(500);
+    })
+  })
 
 
 
@@ -96,11 +118,12 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
         const priceLevel = restaurant.price_level;
         const dinerLike = false;
         const guestLike = false;
-        
+        const maxHeight = 500;
+        const maxWidth = 400;
 
-        const queryText = `INSERT INTO "restaurants" (fight_id, restaurant_name, place_id, photo_reference, rating, price_level, diner_like, guest_like)
-                           VALUES ($1, $2, $3, $4, $5, $6, $7, $8);`;
-         connection.query(queryText, [fightId, restaurantName, placeId, photoReference, rating, priceLevel, dinerLike, guestLike]); 
+        const queryText = `INSERT INTO "restaurants" (fight_id, restaurant_name, place_id, photo_reference, rating, price_level, diner_like, guest_like, max_height, max_width)
+                           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
+         connection.query(queryText, [fightId, restaurantName, placeId, photoReference, rating, priceLevel, dinerLike, guestLike, maxHeight, maxWidth]); 
        
         
     });

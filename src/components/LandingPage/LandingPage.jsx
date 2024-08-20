@@ -18,17 +18,16 @@ function LandingPage() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % 4); // Assuming there are 4 items
+            setCurrentIndex((prevIndex) => (prevIndex + 1) % 4); 
         }, 5000);
 
-        return () => clearInterval(interval); // Cleanup interval on component unmount
+        return () => clearInterval(interval); 
     }, []);
  
 
   return (
     <div className="">
       <h2>{heading}</h2>
-
       <div className="grid">
         <div className="grid-col grid-col_12">
           <div className="container rules-box">
