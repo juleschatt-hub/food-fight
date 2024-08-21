@@ -1,10 +1,10 @@
 
 
 
-const fightIdReducer = (state = [], action) => {
+const fightIdReducer = (state = 0, action) => {
     switch(action.type) {
         case 'GET_FIGHT_ID':
-            return action.payload;
+            return action.payload.fightId;
         default:
             return state;
     }

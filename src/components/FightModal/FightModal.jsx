@@ -40,15 +40,11 @@ function closeModal() {
 
   useEffect(() => {
         
-      dispatch({type: 'FETCH_FIGHT'});
+      dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
       
-   }, [])  
+   }, [fightId])  
 
-   useEffect(() => {
-        
-    dispatch({type: 'FETCH_FIGHT_ID' });;
-    
- }, [fightId]) 
+  
    
     return (
       

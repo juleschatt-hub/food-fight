@@ -55,18 +55,14 @@ router.get('/placesget', rejectUnauthenticated, async (req, res) => {
     }
   });
 
-  router.get('/', (req, res) => {
-    const fightId = req.params.fightId
+  router.get('/:id', (req, res) => {
+    const fightId = req.params.id;
+    console.log('fightid from router', fightId);
     const sqlText = `SELECT * 
                       FROM "fights" 
                       JOIN "restaurants" ON fights.id = restaurants.fight_id
-                      WHERE fights.id = (
-                          SELECT id
-                          FROM "fights"
-                          ORDER BY id DESC
-                          LIMIT 1
-                      );`;
-    pool.query(sqlText)
+                      WHERE fights.id = $1;`;
+    pool.query(sqlText, [fightId])
     .then((result) => {
         console.log('result of fight get', result.rows);
         res.send(result.rows)

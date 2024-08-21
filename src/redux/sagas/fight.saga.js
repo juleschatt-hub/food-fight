@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { put, takeEvery, takeLatest } from 'redux-saga/effects';
 
-function* fetchFight() {
+function* fetchFight(action) {
     try{
-        
-        const response = yield axios.get(`/api/places/`);
+        const fightId = action.payload.fightId;
+        const response = yield axios.get(`/api/places/${fightId}`);
         console.log('fight response.data', response.data);
         yield put({ type: 'SET_FIGHT', payload: response.data});
     }
