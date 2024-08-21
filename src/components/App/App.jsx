@@ -59,17 +59,9 @@ function App() {
             exact
             path="/user"
           >
-            {/* <UserPage /> */}
-            <DashBoard />
-
-          </ProtectedRoute>
-
-          <ProtectedRoute
             
-            exact
-            path="/dashboard"
-          >
             <DashBoard />
+
           </ProtectedRoute>
           
           <ProtectedRoute

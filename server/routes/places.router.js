@@ -56,6 +56,7 @@ router.get('/placesget', rejectUnauthenticated, async (req, res) => {
   });
 
   router.get('/', (req, res) => {
+    const fightId = req.params.fightId
     const sqlText = `SELECT * 
                       FROM "fights" 
                       JOIN "restaurants" ON fights.id = restaurants.fight_id
@@ -101,6 +102,7 @@ router.get('/placesget', rejectUnauthenticated, async (req, res) => {
         await connection.query('BEGIN;');
         const result = await connection.query(fightQueryText, [dinerId, guestId, dinnerDate, restaurantMatchId]);
         const fightId = result.rows[0].id;
+        console.log('fightid', fightId);
 
         //sorts api call results in a random order
         const restaurants = response.data.results.sort(() => .5 - Math.random());
@@ -128,7 +130,7 @@ router.get('/placesget', rejectUnauthenticated, async (req, res) => {
         
     });
         await connection.query('COMMIT;');
-        res.sendStatus(201);
+        res.send({fightId});
 
     }
     catch(error) {

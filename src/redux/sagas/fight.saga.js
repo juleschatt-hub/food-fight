@@ -3,7 +3,8 @@ import { put, takeEvery, takeLatest } from 'redux-saga/effects';
 
 function* fetchFight() {
     try{
-        const response = yield axios.get('/api/places');
+        
+        const response = yield axios.get(`/api/places/`);
         console.log('fight response.data', response.data);
         yield put({ type: 'SET_FIGHT', payload: response.data});
     }
