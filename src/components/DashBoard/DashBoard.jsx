@@ -5,6 +5,7 @@ import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 import FightModal from '../FightModal/FightModal';
 import DiningCompanions from '../DiningCompanions/DiningCompanions';
+import UserFights from '../UserFights/UserFights';
 
 
 
@@ -14,6 +15,7 @@ function DashBoard() {
     const allUsers = useSelector((store) => store.all_users);
     const user = useSelector((store) => store.user);
     const fight = useSelector((store) => store.fightReducer);
+    const userFights = useSelector((store) => store.userFightsReducer);
     //const fightId = useSelector((store) => store.fightIdReducer)
     //const dispatch = useDispatch();
     //const history = useHistory();
@@ -31,7 +33,11 @@ function DashBoard() {
       <h2>Welcome, {user.first_name}!</h2>
       <LogOutButton className="btn" />
     </div>
+    <div>
+      <UserFights />
+    </div>
     <div id="upcoming_meals">
+      
       <h1>Upcoming Meals:</h1>
       <div className="upcoming">
         {/* EACH MATCHING RESTAURANT THATS DATE IS UPCOMING GOES HERE */}

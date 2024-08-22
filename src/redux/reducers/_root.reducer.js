@@ -4,6 +4,7 @@ import user from './user.reducer';
 import all_users from './all_users.reducer';
 import fightReducer from './fight.reducer';
 import fightIdReducer from './fightid.reducer';
+import userFightsReducer from './user_fights.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
   user, // will have an id and username if someone is logged in
   all_users,
   fightReducer,
-  fightIdReducer
+  fightIdReducer,
+  userFightsReducer
 });
 
 export default rootReducer;

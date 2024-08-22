@@ -53,6 +53,27 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 //     }
 //   });
 
+  // GET a list of food fights for the logged in user
+  router.get('/userfights', rejectUnauthenticated, (req, res) => {
+    const userId = req.user.id;
+    console.log('userId from GET route', userId);
+    const sqlText = `SELECT *, 
+	                  (SELECT first_name FROM "user" WHERE "user".id = diner_id) as diner_name,
+	                  (SELECT first_name FROM "user" WHERE "user".id = guest_id) as guest_name
+                    FROM "fights"
+                    WHERE (diner_id = $1 OR guest_id = $1) AND restaurant_match_id IS NULL;`;
+    pool.query(sqlText, [userId])
+    .then((result) => {
+        console.log('result.rows of fight get', result.rows);
+        res.send(result.rows)
+    }).catch(err => {
+        console.log(err);
+        res.sendStatus(500);
+    })
+  }) //END FIGHT GET
+
+
+  // GET restaurants for an active food fight (detail page)
   router.get('/:id', rejectUnauthenticated, (req, res) => {
     const fightId = req.params.id;
     console.log('fightid from GET route', fightId);
