@@ -53,7 +53,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 //     }
 //   });
 
-  router.get('/:id', (req, res) => {
+  router.get('/:id', rejectUnauthenticated, (req, res) => {
     const fightId = req.params.id;
     console.log('fightid from GET route', fightId);
     const sqlText = `SELECT * 
@@ -73,7 +73,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
 
   //POST 10 random restaurants to DB
-  router.post('/restaurants', async (req, res) => {
+  router.post('/restaurants', rejectUnauthenticated, async (req, res) => {
     const connection = await pool.connect();
     try {
         // Make a request to the Google Places API
