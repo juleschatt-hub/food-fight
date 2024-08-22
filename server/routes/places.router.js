@@ -5,8 +5,6 @@ const {
 } = require('../modules/authentication-middleware');
 const encryptLib = require('../modules/encryption');
 const pool = require('../modules/pool');
-//const userStrategy = require('../strategies/user.strategy');
-//const user = require('./user.router');
 
 require('dotenv').config();
 
@@ -17,60 +15,60 @@ const router = express.Router();
 //Places API
 const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
-router.get('/placesget', rejectUnauthenticated, async (req, res) => {
-    try {
-      // Make a request to the Google Places API
-      const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
-        params: {
-            location: '44.9778,-93.2650',
-            radius: 50000,
-            type: 'restaurant',
-            key: PLACES_API_KEY
-        },
-      });
+// router.get('/placesget', rejectUnauthenticated, async (req, res) => {
+//     try {
+//       // Make a request to the Google Places API
+//       const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
+//         params: {
+//             location: '44.9778,-93.2650',
+//             radius: 50000,
+//             type: 'restaurant',
+//             key: PLACES_API_KEY
+//         },
+//       });
 
-    //sorts api call results in a random order
-    const restaurants = response.data.results.sort(() => .5 - Math.random());
+//     //sorts api call results in a random order
+//     const restaurants = response.data.results.sort(() => .5 - Math.random());
     
-    //after results have been radomized this takes 
-    //the first ten results from the response
-    const randomRestaurants = restaurants.slice(0, 10);
-    console.log('array size', randomRestaurants.length);
-    console.log(randomRestaurants);
+//     //after results have been radomized this takes 
+//     //the first ten results from the response
+//     const randomRestaurants = restaurants.slice(0, 10);
+//     console.log('array size', randomRestaurants.length);
+//     console.log(randomRestaurants);
 
-    //isolating photo reference
-    randomRestaurants.map(i => {
-        let photoReference = i.photos[0].photo_reference;
-        let maxHeight = i.photos[0].height;
-        console.log('photo reference', photoReference);
-        console.log('height', maxHeight);
-    })
+//     //isolating photo reference
+//     randomRestaurants.map(i => {
+//         let photoReference = i.photos[0].photo_reference;
+//         let maxHeight = i.photos[0].height;
+//         console.log('photo reference', photoReference);
+//         console.log('height', maxHeight);
+//     })
     
 
-      // Return the API response to the client
-      res.send(randomRestaurants);
-    } catch (error) {
-      console.error('Error fetching data from Google Places API:', error);
-      res.status(500).json({ error: 'Error fetching data from Google Places API' });
-    }
-  });
+//       // Return the API response to the client
+//       res.send(randomRestaurants);
+//     } catch (error) {
+//       console.error('Error fetching data from Google Places API:', error);
+//       res.status(500).json({ error: 'Error fetching data from Google Places API' });
+//     }
+//   });
 
   router.get('/:id', (req, res) => {
     const fightId = req.params.id;
-    console.log('fightid from router', fightId);
+    console.log('fightid from GET route', fightId);
     const sqlText = `SELECT * 
                       FROM "fights" 
                       JOIN "restaurants" ON fights.id = restaurants.fight_id
                       WHERE fights.id = $1;`;
     pool.query(sqlText, [fightId])
     .then((result) => {
-        console.log('result of fight get', result.rows);
+        console.log('result.rows of fight get', result.rows);
         res.send(result.rows)
     }).catch(err => {
         console.log(err);
         res.sendStatus(500);
     })
-  })
+  }) //END FIGHT GET
 
 
 
@@ -98,7 +96,7 @@ router.get('/placesget', rejectUnauthenticated, async (req, res) => {
         await connection.query('BEGIN;');
         const result = await connection.query(fightQueryText, [dinerId, guestId, dinnerDate, restaurantMatchId]);
         const fightId = result.rows[0].id;
-        console.log('fightid', fightId);
+        console.log('fightid from POST route', fightId);
 
         //sorts api call results in a random order
         const restaurants = response.data.results.sort(() => .5 - Math.random());
@@ -138,7 +136,7 @@ router.get('/placesget', rejectUnauthenticated, async (req, res) => {
         connection.release();
     }
 
-  })
+  }) //END /RESTAURANTS POST
 
 
 

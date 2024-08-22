@@ -14,9 +14,9 @@ function DashBoard() {
     const allUsers = useSelector((store) => store.all_users);
     const user = useSelector((store) => store.user);
     const fight = useSelector((store) => store.fightReducer);
-
-    const dispatch = useDispatch();
-    const history = useHistory();
+    //const fightId = useSelector((store) => store.fightIdReducer)
+    //const dispatch = useDispatch();
+    //const history = useHistory();
 
     
    
