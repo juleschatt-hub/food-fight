@@ -138,6 +138,21 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
   }) //END /RESTAURANTS POST
 
+  router.put('/like/toggle/:id', (req, res) => {
+      let id = req.params.id;
+      console.log('id', id)
+      const queryTextDiner = ``; //building query
+      pool.query(queryTextDiner, [id])
+      .then(dbResult => {
+        console.log('like put reslut', dbResult);
+        res.sendStatus(200);
+      })
+      .catch(dbError => {
+        console.log('like put error', dbError);
+        res.sendStatus(500);
+      })
+  })
+
 
 
 
