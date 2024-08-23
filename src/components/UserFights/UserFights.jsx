@@ -10,7 +10,7 @@ function UserFights() {
     const userFights = useSelector((store) => store.userFightsReducer);
     const allUsers = useSelector((store) => store.all_users);
     const user = useSelector((store) => store.user);
-    //const fightId = useSelector((store) => store.fightIdReducer);
+    const fightId = useSelector((store) => store.fightIdReducer);
     
     console.log('userfights', userFights);
 
@@ -24,12 +24,9 @@ function UserFights() {
     //     dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
     //  }, [fightId]) 
 
-     function getFight() {
+     function getFight() {   
+        dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
         
-        //dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
-       
-        
-
      }
     return(
         <>
