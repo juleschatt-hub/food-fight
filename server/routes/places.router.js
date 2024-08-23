@@ -57,7 +57,6 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
   router.get('/userfights', (req, res) => {
     
     const userId = req.user.id;
-    console.log('userId from GET route', userId);
     const sqlText = `SELECT *, 
 	                  (SELECT first_name FROM "user" WHERE "user".id = diner_id) as diner_name,
 	                  (SELECT first_name FROM "user" WHERE "user".id = guest_id) as guest_name
@@ -75,8 +74,26 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
 
   // GET restaurants for an active food fight (detail page)
+  router.get('/activefight/:id', (req, res) => {
+    const {id} = req.params;
+    const sqlText = `SELECT * 
+                      FROM "fights" 
+                      JOIN "restaurants" ON fights.id = restaurants.fight_id
+                      WHERE fights.id = $1;`;
+    pool.query(sqlText, [id])
+      .then((result => {
+        res.send(result.rows[0]);
+      }))
+      .catch((error) => {
+        console.log('error on active fight query', error);
+      })
+  })
+
+
+
   router.get('/:id', rejectUnauthenticated, (req, res) => {
     const fightId = req.params.id;
+    console.log('req.params', req.params);
     console.log('fightid from GET route', fightId);
     const sqlText = `SELECT * 
                       FROM "fights" 
@@ -147,6 +164,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
     });
         await connection.query('COMMIT;');
         res.send({fightId});
+        //res.sendStatus(200);
 
     }
     catch(error) {

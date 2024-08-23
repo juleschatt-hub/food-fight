@@ -24,22 +24,23 @@ function UserFights() {
     //     dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
     //  }, [fightId]) 
 
-     function getFight() {   
+     const getFightId = (evt) =>  {   
         dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
-        
+        evt.preventDefault(); 
      }
+
     return(
         <>
         <h1>{user.first_name}'s Fights:</h1>
             {userFights.map((fight) =>
                 <ul>
-                    <li>{fight.diner_name}</li>
-                    <li>{fight.guest_name}</li>
+                    <li>Diner: {fight.diner_name}</li>
+                    <li>Guest: {fight.guest_name}</li>
                     <li>{fight.id}</li>
                     <button 
                     className="btn btn_sizeSm" 
                     value={fight.id}
-                    onClick={getFight} >
+                    onClick={getFightId} >
                     View Fight</button>
                     <hr />
                 </ul>
