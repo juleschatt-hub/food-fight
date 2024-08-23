@@ -27,7 +27,7 @@ function DiningCompanions() {
              setGuestId(0);
          })
          .catch((error) => {
-            console.log('error getting fightID', error);
+            console.log('error getting fightID', error)
          })
          
      }

@@ -18,10 +18,9 @@ const customStyles = {
 
 
 
-function FightModal() {
+function FightModal(props) {
 let subtitle;
 const [modalIsOpen, setIsOpen] = React.useState(false);
-
 function openModal() {
   setIsOpen(true);
 }
@@ -36,34 +35,20 @@ function closeModal() {
 }
   const dispatch = useDispatch();
   const fight = useSelector((store) => store.fightReducer);
-  const fightId = useSelector((store) => store.fightIdReducer)
+  const fightId = useSelector((store) => store.fightIdReducer);
   const user = useSelector((store) => store.user);
 
 
   useEffect(() => {
        
-      dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
-      
-      
+      dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
    }, [fightId])  
 
-   function handleLike(id) {
-      useEffect(() => {
-        axios.put(`/like/toggle/${id}`, fight)
-        .then((response) => {
-          console.log('like toggle success', response);
-        })
-        .catch((error) => {
-          console.log('toggle like failed: ', error)
-        })
-      }, [fight])
-
-   }
    
     return (
       
       <div>
-        <button className="btn" onClick={openModal}>Start Fight</button>
+        <button className="btn" onClick={openModal}>View Fight</button>
         <Modal
         isOpen={modalIsOpen}
         onAfterOpen={afterOpenModal}

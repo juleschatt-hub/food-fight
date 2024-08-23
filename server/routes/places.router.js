@@ -54,7 +54,8 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 //   });
 
   // GET a list of food fights for the logged in user
-  router.get('/userfights', rejectUnauthenticated, (req, res) => {
+  router.get('/userfights', (req, res) => {
+    
     const userId = req.user.id;
     console.log('userId from GET route', userId);
     const sqlText = `SELECT *, 
@@ -64,7 +65,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
                     WHERE (diner_id = $1 OR guest_id = $1) AND restaurant_match_id IS NULL;`;
     pool.query(sqlText, [userId])
     .then((result) => {
-        console.log('result.rows of fight get', result.rows);
+        console.log('result.rows of userfights get', result.rows );
         res.send(result.rows)
     }).catch(err => {
         console.log(err);

@@ -5,7 +5,7 @@ function* fetchFight(action) {
     try{
         const fightId = action.payload.fightId;
         const response = yield axios.get(`/api/places/${fightId}`);
-        yield put({ type: 'SET_FIGHT', payload: response.data});
+        yield put({ type: 'SET_FIGHT', payload: response.rows.id});
     }
     catch(error){
         console.log('Error fetching fight:', error);
