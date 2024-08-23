@@ -1,32 +1,25 @@
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import FightModal from '../FightModal/FightModal';
 
 
 
-function UserFights() {
+function UserFights({setIsOpen}) {
     const userFights = useSelector((store) => store.userFightsReducer);
-    const allUsers = useSelector((store) => store.all_users);
+    // const allUsers = useSelector((store) => store.all_users);
     const user = useSelector((store) => store.user);
-    const fightId = useSelector((store) => store.fightIdReducer);
     
-    console.log('userfights', userFights);
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch({type: 'FETCH_USER_FIGHTS'});
     }, [])
 
-    // useEffect(() => {
-       
-    //     dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
-    //  }, [fightId]) 
 
-     const getFightId = (evt) =>  {   
-        dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
-        evt.preventDefault(); 
+
+     const getFightId = (fightId) => (evt) =>  {
+        //dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
+        dispatch({type: 'GET_FIGHT_ID', payload: {fightId: fightId}})
+        setIsOpen(true);
      }
 
     return(
@@ -39,8 +32,7 @@ function UserFights() {
                     <li>{fight.id}</li>
                     <button 
                     className="btn btn_sizeSm" 
-                    value={fight.id}
-                    onClick={getFightId} >
+                    onClick={getFightId(fight.id)} >
                     View Fight</button>
                     <hr />
                 </ul>

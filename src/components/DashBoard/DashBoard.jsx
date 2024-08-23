@@ -20,7 +20,7 @@ function DashBoard() {
     //const dispatch = useDispatch();
     //const history = useHistory();
 
-    
+    const [modalIsOpen, setIsOpen] = React.useState(false);
    
 
  
@@ -34,7 +34,7 @@ function DashBoard() {
       <LogOutButton className="btn" />
     </div>
     <div>
-      <UserFights />
+      <UserFights setIsOpen={setIsOpen} />
     </div>
     <div id="upcoming_meals">
       
@@ -47,7 +47,7 @@ function DashBoard() {
       <DiningCompanions />
     </div>
     <div id="fightModal">
-      <FightModal />
+      <FightModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />
     </div>
    
 </>

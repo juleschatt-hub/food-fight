@@ -61,7 +61,11 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 	                  (SELECT first_name FROM "user" WHERE "user".id = diner_id) as diner_name,
 	                  (SELECT first_name FROM "user" WHERE "user".id = guest_id) as guest_name
                     FROM "fights"
-                    WHERE (diner_id = $1 OR guest_id = $1) AND restaurant_match_id IS NULL;`;
+                    WHERE (diner_id = $1 OR guest_id = $1) AND restaurant_match_id IS NULL
+                    ORDER BY id desc
+                    ;
+                    
+                    `;
     pool.query(sqlText, [userId])
     .then((result) => {
         console.log('result.rows of userfights get', result.rows );
@@ -74,23 +78,6 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
 
   // GET restaurants for an active food fight (detail page)
-  router.get('/activefight/:id', (req, res) => {
-    const {id} = req.params;
-    const sqlText = `SELECT * 
-                      FROM "fights" 
-                      JOIN "restaurants" ON fights.id = restaurants.fight_id
-                      WHERE fights.id = $1;`;
-    pool.query(sqlText, [id])
-      .then((result => {
-        res.send(result.rows[0]);
-      }))
-      .catch((error) => {
-        console.log('error on active fight query', error);
-      })
-  })
-
-
-
   router.get('/:id', rejectUnauthenticated, (req, res) => {
     const fightId = req.params.id;
     console.log('req.params', req.params);
@@ -98,7 +85,8 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
     const sqlText = `SELECT * 
                       FROM "fights" 
                       JOIN "restaurants" ON fights.id = restaurants.fight_id
-                      WHERE fights.id = $1;`;
+                      WHERE fights.id = $1
+                      ;`;
     pool.query(sqlText, [fightId])
     .then((result) => {
         console.log('result.rows of fight get', result.rows);
@@ -111,7 +99,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
 
 
-  //POST 10 random restaurants to DB
+  //POST 10 random restaurants to DB from google places api
   router.post('/restaurants', rejectUnauthenticated, async (req, res) => {
     const connection = await pool.connect();
     try {
@@ -140,7 +128,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
         //sorts api call results in a random order
         const restaurants = response.data.results.sort(() => .5 - Math.random());
 
-        //after results have been radomized this limits 
+        //after results have been randomized this limits 
         //the number of results that post to DB to 10
         const randomRestaurants = restaurants.slice(0, 10);
 
@@ -164,8 +152,6 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
     });
         await connection.query('COMMIT;');
         res.send({fightId});
-        //res.sendStatus(200);
-
     }
     catch(error) {
         await connection.query('ROLLBACK;');
@@ -178,20 +164,27 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
   }) //END /RESTAURANTS POST
 
-  router.put('/like/toggle/:id', (req, res) => {
+  router.put('/like/:id', (req, res) => {
       let id = req.params.id;
       console.log('id', id)
       const queryTextDiner = ``; //building query
       pool.query(queryTextDiner, [id])
       .then(dbResult => {
-        console.log('like put reslut', dbResult);
+        console.log('like put result', dbResult);
         res.sendStatus(200);
       })
       .catch(dbError => {
         console.log('like put error', dbError);
         res.sendStatus(500);
       })
-  })
+  }) //END like put route
+
+//START match route
+router.put('/match/:id', (req, res) => {
+
+})
+//END match route
+
 
 
 
