@@ -15,7 +15,7 @@ function* fetchFight(action) {
 
 function* updateDinerLike(action) {
     try {
-        const restaurantId = action.payload.id;
+        const restaurantId = action.payload;
         console.log('restaurantid', restaurantId);
         const response = yield axios.put(`/api/places/like/${restaurantId}`);
         console.log('updateDinerLike response', response);

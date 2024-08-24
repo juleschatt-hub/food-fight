@@ -168,7 +168,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
       console.log('id', id)
       const queryTextDiner = `UPDATE restaurants 
                               SET diner_like = true
-                              WHERE id = $1;`; //building query
+                              WHERE id = $1;`; 
       pool.query(queryTextDiner, [id])
       .then(dbResult => {
         console.log('like put result', dbResult);

@@ -43,9 +43,10 @@ function closeModal() {
       dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
    }, [fightId])
    
-   const updateDinerLike = () => {
+   const updateDinerLike = (index) => {
+  
     console.log('fight in updateDinerLike', fight);
-    dispatch({type: 'SET_DINER_LIKE', payload: fight[0].id})
+    dispatch({type: 'UPDATE_DINER_LIKE', payload: fight[index].id})
    }
 
    
@@ -74,7 +75,7 @@ function closeModal() {
                 </tr>
               </thead>
               <tbody>
-                {fight.map((restaurant) => (
+                {fight.map((restaurant, index) => (
                   <tr key={restaurant.id}> 
                     <td>{restaurant.restaurant_name}</td>
                     {/* <td>{restaurant.diner_like.toString()}</td> */}
@@ -87,7 +88,7 @@ function closeModal() {
                       />
                     </td> */}
                     <td>
-                      <button className='btn btn_sizeSm' onClick={updateDinerLike}>Like</button>
+                      <button className='btn btn_sizeSm' onClick={() => updateDinerLike(index)}>Like</button>
                       <button className='btn btn_sizeSm'>Dislike</button>
                     </td>
                   </tr>
