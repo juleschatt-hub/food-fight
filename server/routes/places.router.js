@@ -63,6 +63,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
                     FROM "fights"
                     WHERE (diner_id = $1 OR guest_id = $1) AND restaurant_match_id IS NULL
                     ORDER BY id desc
+                    LIMIT 5
                     ;
                     
                     `;
@@ -146,9 +147,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
         const queryText = `INSERT INTO "restaurants" (fight_id, restaurant_name, place_id, photo_reference, rating, price_level, diner_like, guest_like, max_height, max_width)
                            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`;
-         connection.query(queryText, [fightId, restaurantName, placeId, photoReference, rating, priceLevel, dinerLike, guestLike, maxHeight, maxWidth]); 
-       
-        
+         connection.query(queryText, [fightId, restaurantName, placeId, photoReference, rating, priceLevel, dinerLike, guestLike, maxHeight, maxWidth]);    
     });
         await connection.query('COMMIT;');
         res.send({fightId});
@@ -167,7 +166,9 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
   router.put('/like/:id', (req, res) => {
       let id = req.params.id;
       console.log('id', id)
-      const queryTextDiner = ``; //building query
+      const queryTextDiner = `UPDATE restaurants 
+                              SET diner_like = true
+                              WHERE id = $1;`; //building query
       pool.query(queryTextDiner, [id])
       .then(dbResult => {
         console.log('like put result', dbResult);

@@ -5,7 +5,7 @@ import LogOutButton from '../LogOutButton/LogOutButton';
 import axios from 'axios';
 
 
-function DiningCompanions() {
+function DiningCompanions({setIsOpen}) {
     const allUsers = useSelector((store) => store.all_users);
     const dispatch = useDispatch();
 
@@ -23,7 +23,8 @@ function DiningCompanions() {
          axios.post('/api/places/restaurants', {guestId})
          .then((result) => {
              console.log('POST result:', result);
-             //dispatch({type: 'GET_FIGHT_ID', payload: {fightId: result.data.fightId}})
+             dispatch({type: 'GET_FIGHT_ID', payload: {fightId: result.data.fightId}});
+             setIsOpen(true);
              setGuestId(0);
          })
          .catch((error) => {

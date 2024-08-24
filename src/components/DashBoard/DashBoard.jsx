@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import LogOutButton from '../LogOutButton/LogOutButton';
-import axios from 'axios';
 import FightModal from '../FightModal/FightModal';
 import DiningCompanions from '../DiningCompanions/DiningCompanions';
 import UserFights from '../UserFights/UserFights';
@@ -16,35 +13,26 @@ function DashBoard() {
     const user = useSelector((store) => store.user);
     const fight = useSelector((store) => store.fightReducer);
     const userFights = useSelector((store) => store.userFightsReducer);
-    //const fightId = useSelector((store) => store.fightIdReducer)
-    //const dispatch = useDispatch();
-    //const history = useHistory();
 
-    const [modalIsOpen, setIsOpen] = React.useState(false);
-   
-
- 
-
+    //MODAL state
+    const [modalIsOpen, setIsOpen] = useState(false);
+  
     return (
 <>
     <div className="container">
-      
-
       <h2>Welcome, {user.first_name}!</h2>
-      <LogOutButton className="btn" />
     </div>
-    <div>
+    <div className='grid-col_2'>
       <UserFights setIsOpen={setIsOpen} />
     </div>
-    <div id="upcoming_meals">
-      
+    <div id="upcoming_meals">    
       <h1>Upcoming Meals:</h1>
       <div className="upcoming">
         {/* EACH MATCHING RESTAURANT THATS DATE IS UPCOMING GOES HERE */}
       </div>
     </div>
-    <div className='container' style={{float: "right"}}>
-      <DiningCompanions />
+    <div className='container grid-col_5'>
+      <DiningCompanions setIsOpen={setIsOpen} />
     </div>
     <div id="fightModal">
       <FightModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />
