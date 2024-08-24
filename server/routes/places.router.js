@@ -164,15 +164,37 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
   }) //END /RESTAURANTS POST
 
   router.put('/like/:id', (req, res) => {
-      let id = req.params.id;
-      console.log('id', id)
-      const queryTextDiner = `UPDATE restaurants 
-                              SET diner_like = true
-                              WHERE id = $1;`; 
-      pool.query(queryTextDiner, [id])
+    console.log(req.user.id);
+      const restaurantId = req.params.id;
+      const currentUser = req.user.id;
+      
+      const queryText = ` SELECT fights.diner_id, fights.guest_id
+                          FROM fights
+                          JOIN restaurants on fights.id = restaurants.fight_id 
+                          WHERE restaurants.id = $1;`;
+   
+      pool.query(queryText, [restaurantId])
       .then(dbResult => {
-        console.log('like put result', dbResult);
-        res.sendStatus(200);
+        const {diner_id, guest_id} = dbResult.rows[0];
+        let updateQuery;
+        let updateValues;
+        if(currentUser === diner_id) {
+          updateQuery  =  `UPDATE restaurants 
+                              SET diner_like = true
+                              WHERE id = $1;`;
+          updateValues = [restaurantId];
+          
+
+        } else if(currentUser === guest_id) {
+          updateQuery =  `UPDATE restaurants 
+                          SET guest_like = true
+                          WHERE id = $1;`;
+          updateValues = [restaurantId];
+          
+        }
+       res.sendStatus(200);
+        
+        
       })
       .catch(dbError => {
         console.log('like put error', dbError);
