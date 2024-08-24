@@ -175,6 +175,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
    
       pool.query(queryText, [restaurantId])
       .then(dbResult => {
+        console.log(dbResult.rows[0]);
         const {diner_id, guest_id} = dbResult.rows[0];
         let updateQuery;
         let updateValues;
@@ -183,14 +184,17 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
                               SET diner_like = true
                               WHERE id = $1;`;
           updateValues = [restaurantId];
-          
+          console.log('if');
 
         } else if(currentUser === guest_id) {
           updateQuery =  `UPDATE restaurants 
                           SET guest_like = true
                           WHERE id = $1;`;
           updateValues = [restaurantId];
-          
+          console.log('else if');
+        } else { 
+          res.sendStatus(400);
+          console.log('else') 
         }
        res.sendStatus(200);
         
