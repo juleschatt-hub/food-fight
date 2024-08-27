@@ -5,6 +5,7 @@ import all_users from './all_users.reducer';
 import fightReducer from './fight.reducer';
 import fightIdReducer from './fightid.reducer';
 import userFightsReducer from './user_fights.reducer';
+import upcomingMealsReducer from './upcoming_meals.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   all_users,
   fightReducer,
   fightIdReducer,
-  userFightsReducer
+  userFightsReducer,
+  upcomingMealsReducer
 });
 
 export default rootReducer;

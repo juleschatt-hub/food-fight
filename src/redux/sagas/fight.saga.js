@@ -42,6 +42,7 @@ function* updateDinerDislike(action) {
 function* updateRestaurantMathcId(action) {
     try {
         const restaurantId = action.payload;
+        console.log(restaurantId);
         const response = yield axios.put(`/api/places/match/${restaurantId}`);
         yield put({type: 'SET_RESTAURANT_MATCH_ID', payload: restaurantId})
     }

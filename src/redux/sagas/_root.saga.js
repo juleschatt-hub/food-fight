@@ -5,6 +5,7 @@ import userSaga from './user.saga';
 import allUsersSaga from './all_users.saga';
 import fightSaga from './fight.saga';
 import userFightsSaga from './user_fights.saga';
+import upcomingMealsSaga from './upcoming_meals.saga';
 
 
 // rootSaga is the primary saga.
@@ -21,6 +22,7 @@ export default function* rootSaga() {
     userSaga(),
     allUsersSaga(),
     fightSaga(),
-    userFightsSaga()
+    userFightsSaga(),
+    upcomingMealsSaga()
   ]);
 }

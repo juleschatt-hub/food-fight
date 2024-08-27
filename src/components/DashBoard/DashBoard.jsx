@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import FightModal from '../FightModal/FightModal';
 import DiningCompanions from '../DiningCompanions/DiningCompanions';
 import UserFights from '../UserFights/UserFights';
-
+import UpcomingMeals from '../UpcomingMeals/UpcomingMeals';
 
 
 function DashBoard() {
@@ -28,7 +28,7 @@ function DashBoard() {
     <div id="upcoming_meals">    
       <h1>Upcoming Meals:</h1>
       <div className="upcoming">
-        {/* EACH MATCHING RESTAURANT THATS DATE IS UPCOMING GOES HERE */}
+        <UpcomingMeals />
       </div>
     </div>
     <div className='container grid-col_5'>

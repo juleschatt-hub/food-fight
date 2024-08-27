@@ -61,9 +61,9 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 	                  (SELECT first_name FROM "user" WHERE "user".id = diner_id) as diner_name,
 	                  (SELECT first_name FROM "user" WHERE "user".id = guest_id) as guest_name
                     FROM "fights"
-                    WHERE (diner_id = $1 OR guest_id = $1) AND restaurant_match_id IS NULL
+                    WHERE (diner_id = $1 OR guest_id = $1) 
                     ORDER BY id desc
-                    LIMIT 5
+                    
                     ;
                     
                     `;
@@ -271,29 +271,55 @@ router.put('/match/:id', (req, res) => {
   .then(dbResult => {
     const {guest_like, diner_like, fight_id} = dbResult.rows[0];
 
-    console.log(dbResult.rows[0].id);
+    console.log('dbresult.rows', dbResult.rows[0].id);
 
     let setMatchQuery;
     if(diner_like && guest_like) {
-      console.log(fight_id);
+      console.log('fightid', fight_id);
       setMatchQuery = `UPDATE fights
                        SET restaurant_match_id = $1
-                      WHERE id = ${dbResult.rows[0].id};`;
+                      WHERE id = ${dbResult.rows[0].id} RETURNING id;`;
+    } else{
+      setMatchQuery = ``
+      console.log('else');
     }
     pool.query(setMatchQuery, [restaurantId])
     .then(dbResult => {
-      console.log(dbResult.rows[0]);
+      console.log('dbruselt.rows', dbResult.rows[0]);
       res.sendStatus(200);
     })
     .catch(error => {
-      console.log(error);
+      console.log('error in match router', error);
       res.sendStatus(500);
     })
     
 
   })
+})//END match route
+
+//START meals GET route
+router.get('/meals/:id', (req, res) => {
+  const user = req.user.id;
+  const fightId = req.params.id;
+  const queryText = `SELECT * 
+                      FROM fights
+                      JOIN restaurants
+                      ON fights.id = restaurants.fight_id
+                      WHERE fights.restaurant_match_id IS NOT NULL
+                      AND restaurants.diner_like = true
+                      AND restaurants.guest_like = true
+                      AND (fights.diner_id = $1 OR fights.guest_id = $1);`;
+  pool.query(queryText, [user])
+  .then((result) => {
+    res.send(result.rows);
+  })
+  .catch(error => {
+    console.log(error);
+    res.sendStatus(500);
+  })
+
+
 })
-//END match route
 
 
 

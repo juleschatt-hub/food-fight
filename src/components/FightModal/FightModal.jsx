@@ -47,15 +47,21 @@ function closeModal() {
   
     console.log('fight in updateDinerLike', fight);
     dispatch({type: 'UPDATE_DINER_LIKE', payload: fight[index].id});
+    dispatch({type: 'UPDATE_RESTAURANT_MATCH_ID', payload: fight[index].id});
     dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
+    if(fight[index].restaurant_match_id != null) {
+      alert('you have matched on a restaurant');
+    } 
    }
 
       
    const updateDinerDislike = (index) => {
-  
+      console.log(index);
     console.log('fight in updateDinerDisLike', fight);
     dispatch({type: 'UPDATE_DINER_DISLIKE', payload: fight[index].id});
-    dispatch({type: 'FETCH_FIGHT', payload: {fightId}});  
+    dispatch({type: 'UPDATE_RESTAURANT_MATCH_ID', payload: fight[index].id});
+    dispatch({type: 'FETCH_FIGHT', payload: {fightId}}); 
+  
    }
 
    
