@@ -8,6 +8,8 @@ const fightReducer = (state = [], action) => {
             return state
         case 'SET_DINER_DISLIKE':
             return state
+        case 'SET_RESTAURANT_MATCH_ID':
+            return state
         default:
             return [...state];
     }
