@@ -63,7 +63,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
                     FROM "fights"
                     WHERE (diner_id = $1 OR guest_id = $1) 
                     ORDER BY id desc
-                    
+                    LIMIT 6
                     ;
                     
                     `;
@@ -308,7 +308,9 @@ router.get('/meals/:id', (req, res) => {
                       WHERE fights.restaurant_match_id IS NOT NULL
                       AND restaurants.diner_like = true
                       AND restaurants.guest_like = true
-                      AND (fights.diner_id = $1 OR fights.guest_id = $1);`;
+                      AND (fights.diner_id = $1 OR fights.guest_id = $1)
+                      ORDER BY fights.id DESC
+                      LIMIT 6;`;
   pool.query(queryText, [user])
   .then((result) => {
     res.send(result.rows);

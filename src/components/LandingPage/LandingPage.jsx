@@ -46,7 +46,7 @@ function LandingPage() {
           </div>
        
         </div>
-        <div className="grid-col grid-col_4">
+        <div style={{marginLeft: "36%"}}>
           <RegisterForm  />
 
           <center>

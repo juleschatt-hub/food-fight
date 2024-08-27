@@ -22,7 +22,11 @@ function DashBoard() {
     <div className="container">
       <h2>Welcome, {user.first_name}!</h2>
     </div>
-    <div className='grid-col_2'>
+    <div>
+      <DiningCompanions setIsOpen={setIsOpen} />
+    </div>
+   
+    <div >
       <UserFights setIsOpen={setIsOpen} />
     </div>
     <div id="upcoming_meals">    
@@ -31,9 +35,7 @@ function DashBoard() {
         <UpcomingMeals />
       </div>
     </div>
-    <div className='container grid-col_5'>
-      <DiningCompanions setIsOpen={setIsOpen} />
-    </div>
+   
     <div id="fightModal">
       <FightModal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />
     </div>

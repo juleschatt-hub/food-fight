@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import './UserFights.css';
 
 
 
@@ -23,21 +24,22 @@ function UserFights({setIsOpen}) {
      }
 
     return(
-        <>
-        <h1>{user.first_name}'s Fights:</h1>
-            {userFights.map((fight) =>
-                <ul>
-                    <li>Diner: {fight.diner_name}</li>
-                    <li>Guest: {fight.guest_name}</li>
-                    <li>{fight.id}</li>
-                    <button 
-                    className="btn btn_sizeSm" 
-                    onClick={getFightId(fight.id)} >
-                    View Fight</button>
-                    <hr />
-                </ul>
-            )}
-        </>
+        
+            <div>
+                <h1>{user.first_name}'s Fights In Progress:</h1>
+                    {userFights.map((fight) =>
+                        <ul className='userPanel'>
+                            <li>Diner: {fight.diner_name}</li>
+                            <li>Guest: {fight.guest_name}</li>
+                            <button 
+                            className="btn btn_sizeSm" 
+                            onClick={getFightId(fight.id)} >
+                            View Fight</button>
+                            <hr />
+                        </ul>
+                    )}
+            </div>
+        
     )
 
 }

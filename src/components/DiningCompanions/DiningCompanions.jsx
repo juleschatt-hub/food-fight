@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 
+import '../UserFights/UserFights.css';
+
 
 function DiningCompanions({setIsOpen}) {
     const allUsers = useSelector((store) => store.all_users);
@@ -37,13 +39,13 @@ function DiningCompanions({setIsOpen}) {
         <>
             <h1>Dining Companions:</h1>
             {allUsers.map((guestUser) => 
-            <form onSubmit={guestIdSubmit}>
-                <table border="0" cellPadding="10" cellSpacing="0">
+            <form className='userPanel' onSubmit={guestIdSubmit}>
+                <table order="0" cellPadding="10" cellSpacing="0">
                     <tbody>
                         <tr key={guestUser.id}>
                             <strong><td>{guestUser.first_name}:</td></strong>
                             <div>
-                                <td style={{justify:"left"}}>
+                                <td>
                                     <button className='btn btn_sizeSm'
                                     type='submit'
                                     value={guestUser.id}
