@@ -262,7 +262,36 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
 //START match route
 router.put('/match/:id', (req, res) => {
-  
+  const restaurantId = req.params.id;
+  const queryText = `SELECT restaurants.diner_like, restaurants.guest_like, fights.id
+                     FROM fights
+                     JOIN restaurants on fights.id = restaurants.fight_id 
+                     WHERE restaurants.id = $1;`;
+  pool.query(queryText, [restaurantId])
+  .then(dbResult => {
+    const {guest_like, diner_like, fight_id} = dbResult.rows[0];
+
+    console.log(dbResult.rows[0].id);
+
+    let setMatchQuery;
+    if(diner_like && guest_like) {
+      console.log(fight_id);
+      setMatchQuery = `UPDATE fights
+                       SET restaurant_match_id = $1
+                      WHERE id = ${dbResult.rows[0].id};`;
+    }
+    pool.query(setMatchQuery, [restaurantId])
+    .then(dbResult => {
+      console.log(dbResult.rows[0]);
+      res.sendStatus(200);
+    })
+    .catch(error => {
+      console.log(error);
+      res.sendStatus(500);
+    })
+    
+
+  })
 })
 //END match route
 
