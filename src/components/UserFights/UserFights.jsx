@@ -20,6 +20,8 @@ function UserFights({setIsOpen}) {
      const getFightId = (fightId) => (evt) =>  {
         //dispatch({type: 'FETCH_FIGHT', payload: {fightId}});
         dispatch({type: 'GET_FIGHT_ID', payload: {fightId: fightId}})
+        dispatch({type: 'FETCH_USER_FIGHTS'});
+        
         setIsOpen(true);
      }
 
