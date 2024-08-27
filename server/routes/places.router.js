@@ -87,6 +87,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
                       FROM "fights" 
                       JOIN "restaurants" ON fights.id = restaurants.fight_id
                       WHERE fights.id = $1
+                      ORDER BY restaurants.id desc
                       ;`;
     pool.query(sqlText, [fightId])
     .then((result) => {
@@ -163,6 +164,7 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
 
   }) //END /RESTAURANTS POST
 
+  //START LIKE PUT ROUTE
   router.put('/like/:id', (req, res) => {
     console.log(req.user.id);
       const restaurantId = req.params.id;
@@ -178,24 +180,27 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
         console.log(dbResult.rows[0]);
         const {diner_id, guest_id} = dbResult.rows[0];
         let updateQuery;
-        let updateValues;
+       
         if(currentUser === diner_id) {
           updateQuery  =  `UPDATE restaurants 
                               SET diner_like = true
                               WHERE id = $1;`;
-          updateValues = [restaurantId];
+          
           console.log('if');
 
         } else if(currentUser === guest_id) {
           updateQuery =  `UPDATE restaurants 
                           SET guest_like = true
                           WHERE id = $1;`;
-          updateValues = [restaurantId];
           console.log('else if');
         } else { 
           res.sendStatus(400);
           console.log('else') 
         }
+        pool.query(updateQuery, [restaurantId])
+        .then(dbResult => {
+          console.log(dbResult.rows[0]);
+        })
        res.sendStatus(200);
         
         
@@ -206,9 +211,58 @@ const PLACES_API_KEY = process.env.PLACES_API_KEY;
       })
   }) //END like put route
 
+
+
+//START DISLIKE PUT ROUTE
+  router.put('/dislike/:id', (req, res) => {
+    console.log(req.user.id);
+      const restaurantId = req.params.id;
+      const currentUser = req.user.id;
+      
+      const queryText = ` SELECT fights.diner_id, fights.guest_id
+                          FROM fights
+                          JOIN restaurants on fights.id = restaurants.fight_id 
+                          WHERE restaurants.id = $1;`;
+   
+      pool.query(queryText, [restaurantId])
+      .then(dbResult => {
+        console.log(dbResult.rows[0]);
+        const {diner_id, guest_id} = dbResult.rows[0];
+        let updateQuery;
+       
+        if(currentUser === diner_id) {
+          updateQuery  =  `UPDATE restaurants 
+                              SET diner_like = false
+                              WHERE id = $1;`;
+          
+          console.log('if');
+
+        } else if(currentUser === guest_id) {
+          updateQuery =  `UPDATE restaurants 
+                          SET guest_like = false
+                          WHERE id = $1;`;
+          console.log('else if');
+        } else { 
+          res.sendStatus(400);
+          console.log('else') 
+        }
+        pool.query(updateQuery, [restaurantId])
+        .then(dbResult => {
+          console.log(dbResult.rows[0]);
+        })
+       res.sendStatus(200);
+        
+        
+      })
+      .catch(dbError => {
+        console.log('like put error', dbError);
+        res.sendStatus(500);
+      })
+  }) //END dislike put route
+
 //START match route
 router.put('/match/:id', (req, res) => {
-
+  
 })
 //END match route
 

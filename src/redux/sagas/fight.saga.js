@@ -26,9 +26,24 @@ function* updateDinerLike(action) {
     }
 }
 
+function* updateDinerDislike(action) {
+    try {
+        const restaurantId = action.payload;
+        console.log('restaurantid', restaurantId);
+        const response = yield axios.put(`/api/places/dislike/${restaurantId}`);
+        console.log('updateDinerLike response', response);
+        yield put({type: 'SET_DINER_DISLIKE', payload: restaurantId});
+    }
+    catch(error) {
+        console.log('Error updating diner like', error);
+    }
+}
+
+
 function* fightSaga() {
     yield takeEvery('FETCH_FIGHT', fetchFight);
     yield takeEvery('UPDATE_DINER_LIKE', updateDinerLike);
+    yield takeEvery('UPDATE_DINER_DISLIKE', updateDinerDislike);
 }
 
 export default fightSaga;
