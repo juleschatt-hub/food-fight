@@ -19,6 +19,8 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+import DashBoard from '../DashBoard/DashBoard';
+import FightModal from '../FightModal/FightModal.jsx';
 
 import './App.css';
 
@@ -57,9 +59,11 @@ function App() {
             exact
             path="/user"
           >
-            <UserPage />
-          </ProtectedRoute>
+            
+            <DashBoard />
 
+          </ProtectedRoute>
+          
           <ProtectedRoute
             // logged in shows InfoPage else shows LoginPage
             exact
@@ -115,7 +119,7 @@ function App() {
             <h1>404</h1>
           </Route>
         </Switch>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Router>
   );
